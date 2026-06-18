@@ -1,25 +1,44 @@
-import Link from 'next/link';
+"use client";
+import Image from 'next/image';
+
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function Page() {
+  const router = useRouter();
+  const [isChecking, setIsChecking] = useState(true);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const hasAccount = localStorage.getItem('hasAccount') === 'true';
+
+    if (!token) {
+      router.replace('/login');
+      return;
+    }
+
+    if (!hasAccount) {
+      router.replace('/signup');
+      return;
+    }
+
+    router.replace('/dashboard');
+    setIsChecking(false);
+  }, [router]);
+
   return (
     <main className='min-h-screen bg-white px-4 text-black sm:px-6 lg:px-8'>
       <section className='flex min-h-screen items-center justify-center'>
-        <div className='flex w-full max-w-md flex-col items-center rounded-lg border border-black p-6 text-center shadow-sm sm:max-w-lg sm:p-8'>
-          <h1 className='text-3xl font-bold sm:text-4xl'>Welcome to Cloud</h1>
-          <div className='mt-6 flex w-full flex-col gap-3 sm:flex-row sm:justify-center'>
-            <Link
-              href="/signup"
-              className='rounded border border-black px-4 py-2 transition-colors hover:bg-black hover:text-white'
-            >
-              Signup
-            </Link>
-            <Link
-              href="/login"
-              className='rounded border border-black px-4 py-2 transition-colors hover:bg-black hover:text-white'
-            >
-              Login
-            </Link>
-          </div>
+        <div className='flex w-full max-w-sm flex-col items-center rounded-lg p-8 text-center'>
+          <Image
+            src='/logo.svg'
+            width={180}
+            height={64}
+            alt='Cloud logo'
+          />
+          <p className='mt-4 text-sm text-black/70'>
+            {isChecking ? 'Checking your account...' : 'Redirecting...'}
+          </p>
         </div>
       </section>
     </main>
