@@ -3,3 +3,7 @@ export type LoginResponse = {
   token?: string;
   message?: string;
 };
+
+export interface userInfo {
+username: string;
+}
